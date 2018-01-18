@@ -3,6 +3,7 @@ import requests
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 # Creates a graph, called in the get_weather function at the end
 def make_graph(weather, city):
@@ -22,7 +23,7 @@ def make_graph(weather, city):
     temprange.set_title('Weekly Temperature Fluctuations in ' + city[0])
     plt.show()
 
-# Function for being lazy
+# Function to get the weather
 def get_weather(url):
     page = requests.get(url)
     data = html.fromstring(page.content)
@@ -58,9 +59,13 @@ def get_weather(url):
     # Print the data stuff
     print (weather)
     # Make a file
+    root = "/home/grace/Desktop/Web Scraper Project/"
     weather = pd.DataFrame(weather, columns=['Day', 'Max', 'Min']) # Labels the columns
-    weather.to_csv(city[0] + ".csv") # Magic one line code for making a csv file
-    make_graph(weather, city)
+    filename = city[0] + ".csv"
+    with open(root + filename, "a") as f:
+        weather.to_csv(f, header=False) # Appending so that we can collect data over time
+    #weather.to_csv(city[0] + ".csv") Magic one line code for making a csv file
+    #make_graph(weather, city)
 
 
 Eugene_url = 'http://www.bbc.co.uk/weather/5725846'
@@ -91,6 +96,6 @@ def below_zero(url):
         if y <= 0:
             print (x, y)
 
-below_zero(Eugene_url)
-below_zero(Sydney_url)
-below_zero(London_url)
+# below_zero(Eugene_url)
+# below_zero(Sydney_url)
+# below_zero(London_url)
